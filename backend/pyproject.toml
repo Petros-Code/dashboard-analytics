@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dashboard-backend"
-version = "0.1.0"
+version = "1.0.0"
 description = "Dashboard Analytics Backend API"
 authors = ["Petros-Code <petros-code@proton.me>"]
 readme = "README.md"

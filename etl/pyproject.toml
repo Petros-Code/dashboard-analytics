@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "dashboard-etl"
-version = "0.1.0"
+version = "1.0.0"
 description = "Dashboard Analytics ETL Service"
-authors = ["Your Name <your.email@example.com>"]
+authors = ["Petros-Code <ypetros-code@proton.me>"]
 readme = "README.md"
 package-mode = false
 
