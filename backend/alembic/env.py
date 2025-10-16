@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from logging.config import fileConfig
 import os
 
