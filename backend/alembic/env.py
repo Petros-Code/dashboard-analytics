@@ -3,6 +3,10 @@ load_dotenv()
 
 from logging.config import fileConfig
 import os
+import sys
+
+# Ajouter le répertoire parent au path pour importer app
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -14,9 +18,16 @@ from alembic import context
 config = context.config
 
 # Override sqlalchemy.url with DATABASE_URL from environment
-database_url = os.getenv("DATABASE_URL")
-if database_url:
-    config.set_main_option("sqlalchemy.url", database_url)
+# Utiliser la configuration centralisée si disponible
+try:
+    from app.core.config import settings
+    if settings.DATABASE_URL:
+        config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+except ImportError:
+    # Fallback si l'import échoue
+    database_url = os.getenv("DATABASE_URL")
+    if database_url:
+        config.set_main_option("sqlalchemy.url", database_url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
