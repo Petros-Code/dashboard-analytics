@@ -1,10 +1,9 @@
 from sqlalchemy import Column, Float, Integer, String, DateTime, ForeignKey, Boolean, Numeric, Date, Time, Text
-from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from app.core.database import Base
 
 # Création bdd Postgresql
-Base = declarative_base()
 
 class User(Base):
     __tablename__ = "users"
@@ -48,7 +47,11 @@ class Category(Base):
 
     # Relations
     parent = relationship("Category", remote_side=[id], backref="subcategories")
-    products = relationship("Product", back_populates="category")
+    products = relationship(
+        "Product", 
+        primaryjoin="Category.id == Product.category_id",
+        back_populates="category"
+    )
 
 class Marketplace(Base):
     __tablename__ = "marketplaces"
