@@ -43,6 +43,10 @@ class AuthService:
         if not user.is_active:
             raise UnauthorizedError("Account is inactive. Please contact an administrator.")
         
+        # Vérifier que le compte est vérifié
+        if not user.is_verified:
+            raise UnauthorizedError("Account is not verified. Please wait for administrator approval.")
+        
         # Create JWT token
         token_data = {
             "sub": user.id,  # Subject (user ID)

@@ -12,38 +12,6 @@ from app.core.exceptions import UnauthorizedError, ForbiddenError
 security = HTTPBearer()
 
 
-def is_admin(user: User) -> bool:
-    """
-    Check if a user has admin role
-    
-    Args:
-        user: User object
-    
-    Returns:
-        True if user has admin role, False otherwise
-    """
-    if not user.user_roles:
-        return False
-    
-    return any(role.role.name.lower() == "admin" for role in user.user_roles)
-
-
-def get_current_admin_user(
-    current_user: User = Depends(get_current_user_required)
-) -> User:
-    """
-    Dependency to get the current authenticated admin user
-    
-    Raises 403 if user is not admin
-    """
-    if not is_admin(current_user):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Admin access required"
-        )
-    return current_user
-
-
 def get_current_user_required(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db)
@@ -96,4 +64,36 @@ def get_current_user_optional(
         return user if user.is_active else None
     except Exception:
         return None
+
+
+def is_admin(user: User) -> bool:
+    """
+    Check if a user has admin role
+    
+    Args:
+        user: User object
+    
+    Returns:
+        True if user has admin role, False otherwise
+    """
+    if not user.user_roles:
+        return False
+    
+    return any(role.role.name.lower() == "admin" for role in user.user_roles)
+
+
+def get_current_admin_user(
+    current_user: User = Depends(get_current_user_required)
+) -> User:
+    """
+    Dependency to get the current authenticated admin user
+    
+    Raises 403 if user is not admin
+    """
+    if not is_admin(current_user):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+    return current_user
 

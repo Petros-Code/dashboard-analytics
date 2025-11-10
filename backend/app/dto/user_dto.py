@@ -22,11 +22,15 @@ class UserUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[EmailStr] = None
     password: Optional[str] = None
+    is_active: Optional[bool] = None
+    is_verified: Optional[bool] = None
 
 
 class UserResponse(UserBase):
     """Schema for user response"""
     id: int
+    is_active: bool
+    is_verified: bool
     created_at: datetime
     
     class Config:
