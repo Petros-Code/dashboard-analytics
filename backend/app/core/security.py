@@ -4,7 +4,7 @@ Security utilities for JWT token management
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.core.config import settings
 from app.models import User
 from app.repositories.user_repository import UserRepository
@@ -89,9 +89,12 @@ def get_current_user(token: str, db: Session) -> User:
     if user_id is None:
         raise UnauthorizedError("Token payload missing user identifier")
     
-    # Get user from database
-    user_repository = UserRepository(db)
-    user = user_repository.get_by_id(user_id)
+    # Get user from database with roles loaded
+    # Utiliser joinedload pour charger les relations user_roles et role
+    from app.models import UserRole
+    user = db.query(User).options(
+        joinedload(User.user_roles).joinedload(UserRole.role)
+    ).filter(User.id == user_id).first()
     
     if user is None:
         raise UnauthorizedError("User not found")

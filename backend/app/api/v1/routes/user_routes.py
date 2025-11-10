@@ -5,7 +5,9 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.controllers.user_controller import UserController
-from app.dto.user_dto import UserCreate, UserUpdate, UserResponse, UserListResponse
+from app.dto.user_dto import UserCreate, UserUpdate, UserResponse, UserListResponse, DeleteResponse
+from app.middlewares.auth_middleware import get_current_admin_user
+from app.models import User
 
 router = APIRouter(
     prefix="/users",
@@ -19,13 +21,20 @@ controller = UserController()
     "/",
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED,
-    summary="Create a new user"
+    summary="Create a new user (Admin only)",
+    description="Create a new user. Requires admin authentication. Does not generate JWT token."
 )
 async def create_user(
     user_data: UserCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_admin_user)
 ):
-    """Create a new user"""
+    """
+    Create a new user (Admin only)
+    
+    This endpoint is protected and requires admin authentication.
+    Unlike /auth/register, this does not generate a JWT token.
+    """
     return controller.create_user(user_data, db)
 
 
@@ -72,7 +81,8 @@ async def update_user(
 
 @router.delete(
     "/{user_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
+    response_model=DeleteResponse,
+    status_code=status.HTTP_200_OK,
     summary="Delete a user"
 )
 async def delete_user(

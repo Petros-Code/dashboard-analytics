@@ -12,7 +12,10 @@ class User(Base):
     name = Column(String(50), nullable=False)
     email = Column(String(100), nullable=False, unique=True)
     hashed_password = Column(String(255), nullable=False)
+    is_active = Column(Boolean, default=True)  # Compte activé/désactivé par admin
+    is_verified = Column(Boolean, default=False)  # Compte vérifié (email ou admin)
     created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     user_roles = relationship("UserRole", back_populates="user")
 

@@ -93,7 +93,7 @@ class UserController:
         try:
             service = UserService(db)
             service.delete_user(user_id)
-            return {"message": "User deleted successfully"}
+            return {"message": "User has been deleted"}
         except BaseAppException as e:
             raise HTTPException(status_code=e.status_code, detail=e.message)
         except Exception as e:

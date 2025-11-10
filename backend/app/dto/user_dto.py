@@ -40,3 +40,7 @@ class UserListResponse(BaseModel):
     skip: int
     limit: int
 
+
+class DeleteResponse(BaseModel):
+    """Schema for delete operation response"""
+    message: str
