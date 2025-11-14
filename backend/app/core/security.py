@@ -84,10 +84,16 @@ def get_current_user(token: str, db: Session) -> User:
         raise UnauthorizedError("Invalid or expired token")
     
     # Extract user identifier from token (typically stored as 'sub')
-    user_id: Optional[int] = payload.get("sub")
+    # 'sub' is stored as string in JWT, convert to int
+    user_id_str: Optional[str] = payload.get("sub")
     
-    if user_id is None:
+    if user_id_str is None:
         raise UnauthorizedError("Token payload missing user identifier")
+    
+    try:
+        user_id = int(user_id_str)
+    except (ValueError, TypeError):
+        raise UnauthorizedError("Invalid user identifier in token")
     
     # Get user from database with roles loaded
     # Utiliser joinedload pour charger les relations user_roles et role

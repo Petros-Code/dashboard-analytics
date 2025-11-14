@@ -32,6 +32,17 @@ class UserController:
             )
     
     @staticmethod
+    def get_current_user(current_user) -> UserResponse:
+        """Get the current authenticated user's profile"""
+        try:
+            return UserResponse.model_validate(current_user)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Internal server error: {str(e)}"
+            )
+    
+    @staticmethod
     def get_user(user_id: int, db: Session = Depends(get_db)) -> UserResponse:
         """Get a user by ID"""
         try:

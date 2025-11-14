@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.controllers.user_controller import UserController
 from app.dto.user_dto import UserCreate, UserUpdate, UserResponse, UserListResponse, DeleteResponse
-from app.middlewares.auth_middleware import get_current_admin_user
+from app.middlewares.auth_middleware import get_current_admin_user, get_current_user_required
 from app.models import User
 
 router = APIRouter(
@@ -15,6 +15,26 @@ router = APIRouter(
 )
 
 controller = UserController()
+
+
+@router.get(
+    "/me",
+    response_model=UserResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get current user profile",
+    description="Get the profile of the currently authenticated user"
+)
+async def get_current_user_profile(
+    current_user: User = Depends(get_current_user_required),
+    db: Session = Depends(get_db)
+):
+    """
+    Get current user profile
+    
+    Returns the profile information of the authenticated user.
+    Requires a valid JWT token in the Authorization header.
+    """
+    return controller.get_current_user(current_user)
 
 
 @router.post(

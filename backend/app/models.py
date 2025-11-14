@@ -39,6 +39,18 @@ class UserRole(Base):
     user = relationship("User", back_populates="user_roles")
     role = relationship("Role", back_populates="user_roles")
 
+class SectionPermission(Base):
+    __tablename__ = "section_permissions"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    role_id = Column(Integer, ForeignKey("roles.id"), nullable=False)
+    section = Column(String(100), nullable=False)  # Ex: "dashboard", "analytics", "users", etc.
+    can_view = Column(Boolean, default=False)
+    can_edit = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=func.now())
+
+    role = relationship("Role", backref="section_permissions")
+
 class Category(Base):
     __tablename__ = "categories"
 
@@ -253,3 +265,18 @@ class WebsiteAnalytics(Base):
     conversion_rate = Column(Numeric(5, 2), nullable=True)  # Pourcentage
     snapshot_time = Column(Time, nullable=False)  # Heure du snapshot (ex: 03:00)
     created_at = Column(DateTime, default=func.now())
+
+class OperationalCost(Base):
+    __tablename__ = "operational_costs"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    month = Column(Date, nullable=False)  # Mois du coût (ex: 2025-11-01)
+    amount = Column(Numeric(10, 2), nullable=False)  # Montant du coût
+    category = Column(String(100), nullable=False)  # Ex: "hosting", "marketing", "salaries", etc.
+    description = Column(Text, nullable=True)  # Description détaillée
+    created_by = Column(Integer, ForeignKey("users.id"), nullable=False)  # Utilisateur qui a créé l'entrée
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+
+    # Relation avec User
+    creator = relationship("User", backref="operational_costs")

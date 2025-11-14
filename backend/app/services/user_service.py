@@ -5,8 +5,9 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from app.repositories.user_repository import UserRepository
+from app.repositories.role_repository import RoleRepository
 from app.dto.user_dto import UserCreate, UserUpdate
-from app.models import User
+from app.models import User, UserRole
 from app.core.exceptions import NotFoundError, ConflictError, ValidationError
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -21,6 +22,7 @@ class UserService:
     def __init__(self, db: Session):
         self.db = db
         self.repository = UserRepository(db)
+        self.role_repository = RoleRepository(db)
     
     @staticmethod
     def _hash_password(password: str) -> str:
@@ -33,7 +35,15 @@ class UserService:
         return pwd_context.verify(plain_password, hashed_password)
     
     def create_user(self, user_data: UserCreate) -> User:
-        """Create a new user"""
+        """
+        Create a new user and assign default 'user' role
+        
+        Args:
+            user_data: User creation data
+        
+        Returns:
+            Created User with default role assigned
+        """
         # Check if email already exists
         if self.repository.email_exists(user_data.email):
             raise ConflictError(f"User with email {user_data.email} already exists")
@@ -42,11 +52,48 @@ class UserService:
         hashed_password = self._hash_password(user_data.password)
         
         # Create user
-        return self.repository.create(
+        user = self.repository.create(
             name=user_data.name,
             email=user_data.email,
             hashed_password=hashed_password
         )
+        
+        # Assign default 'user' role
+        self._assign_default_role(user)
+        
+        return user
+    
+    def _assign_default_role(self, user: User) -> None:
+        """
+        Assign the default 'user' role to a user
+        
+        Args:
+            user: User object to assign role to
+        """
+        # Get or create the 'user' role
+        user_role = self.role_repository.get_by_name("user")
+        if not user_role:
+            # Create the default 'user' role if it doesn't exist
+            user_role = self.role_repository.create(
+                name="user",
+                description="Default user role"
+            )
+        
+        # Check if user already has this role (shouldn't happen, but safety check)
+        existing_user_role = self.db.query(UserRole).filter(
+            UserRole.user_id == user.id,
+            UserRole.role_id == user_role.id
+        ).first()
+        
+        if not existing_user_role:
+            # Assign the role
+            user_role_assignment = UserRole(
+                user_id=user.id,
+                role_id=user_role.id
+            )
+            self.db.add(user_role_assignment)
+            self.db.commit()
+            self.db.refresh(user)
     
     def get_user_by_id(self, user_id: int) -> User:
         """Get a user by ID"""

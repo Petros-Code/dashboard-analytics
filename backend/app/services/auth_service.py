@@ -48,8 +48,9 @@ class AuthService:
             raise UnauthorizedError("Account is not verified. Please wait for administrator approval.")
         
         # Create JWT token
+        # Note: 'sub' must be a string according to JWT spec
         token_data = {
-            "sub": user.id,  # Subject (user ID)
+            "sub": str(user.id),  # Subject (user ID) - must be string
             "email": user.email
         }
         access_token = create_access_token(data=token_data)
@@ -84,8 +85,9 @@ class AuthService:
         user = self.user_service.create_user(user_create)
         
         # Create JWT token for immediate login
+        # Note: 'sub' must be a string according to JWT spec
         token_data = {
-            "sub": user.id,
+            "sub": str(user.id),  # Subject (user ID) - must be string
             "email": user.email
         }
         access_token = create_access_token(data=token_data)
