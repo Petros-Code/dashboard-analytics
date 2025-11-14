@@ -860,12 +860,17 @@ const Account: React.FC = () => {
                   <form onSubmit={handleAddCost} className="mb-6 p-4 bg-gray-50 rounded-lg">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Mois</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Mois
+                          <span className="text-xs text-gray-500 font-normal ml-2">(Format: YYYY-MM)</span>
+                        </label>
                         <input
                           type="month"
                           value={costForm.month}
                           onChange={(e) => setCostForm({ ...costForm, month: e.target.value })}
                           required
+                          placeholder="YYYY-MM"
+                          title="Format: YYYY-MM (ex: 2025-11)"
                           className="w-full p-2 border border-gray-300 rounded-md"
                         />
                       </div>
@@ -890,11 +895,12 @@ const Account: React.FC = () => {
                           className="w-full p-2 border border-gray-300 rounded-md"
                         >
                           <option value="">Sélectionner</option>
-                          <option value="hosting">Hébergement</option>
-                          <option value="marketing">Marketing</option>
-                          <option value="salaries">Salaires</option>
-                          <option value="tools">Outils</option>
-                          <option value="other">Autre</option>
+                          <option value="conditionnement">Conditionnement</option>
+                          <option value="lavage">Lavage</option>
+                          <option value="deboulochage">Déboulochage</option>
+                          <option value="divers">Divers</option>
+                          <option value="autres">Autres</option>
+                          <option value="abonnement">Abonnement</option>
                         </select>
                       </div>
                       <div className="md:col-span-2">

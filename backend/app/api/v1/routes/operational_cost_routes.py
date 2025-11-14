@@ -14,6 +14,7 @@ from app.dto.operational_cost_dto import (
 )
 from app.middlewares.auth_middleware import get_current_admin_user
 from app.models import User
+from app.core.constants import OperationalCostCategory
 
 router = APIRouter(
     prefix="/costs",
@@ -21,6 +22,24 @@ router = APIRouter(
 )
 
 controller = OperationalCostController()
+
+
+@router.get(
+    "/categories",
+    status_code=status.HTTP_200_OK,
+    summary="Get available cost categories",
+    description="Get list of all available operational cost categories with their display names."
+)
+async def get_categories():
+    """
+    Get all available cost categories
+    
+    Returns a dictionary with category values as keys and their French display names as values.
+    """
+    return {
+        "categories": OperationalCostCategory.get_display_names(),
+        "values": OperationalCostCategory.get_all_values()
+    }
 
 
 @router.post(
@@ -40,7 +59,7 @@ async def create_cost(
     
     - **month**: Month of the cost (YYYY-MM-DD, typically first day of month)
     - **amount**: Cost amount (must be > 0)
-    - **category**: Cost category (e.g., "hosting", "marketing", "salaries")
+    - **category**: Cost category (e.g., "conditionnement", "lavage", "deboulochage", "divers", "autres", "abonnement")
     - **description**: Optional description
     
     Returns the created cost with creator information.
@@ -176,7 +195,7 @@ async def get_costs_by_category(
     """
     Get all costs for a specific category
     
-    - **category**: The category name (e.g., "hosting", "marketing")
+    - **category**: The category name (e.g., "conditionnement", "lavage", "deboulochage", "divers", "autres", "abonnement")
     
     Returns list of costs for the category.
     """

@@ -10,6 +10,7 @@ from app.repositories.user_repository import UserRepository
 from app.dto.operational_cost_dto import OperationalCostCreate, OperationalCostUpdate
 from app.models import OperationalCost
 from app.core.exceptions import NotFoundError, ValidationError
+from app.core.constants import OperationalCostCategory
 
 
 class OperationalCostService:
@@ -46,6 +47,12 @@ class OperationalCostService:
         # Validation: montant doit être positif
         if cost_data.amount <= 0:
             raise ValidationError("Amount must be greater than 0")
+        
+        # Validation: catégorie doit être valide
+        if cost_data.category not in OperationalCostCategory.get_all_values():
+            raise ValidationError(
+                f"Invalid category. Must be one of: {', '.join(OperationalCostCategory.get_all_values())}"
+            )
         
         # Créer le coût
         return self.repository.create(
@@ -107,6 +114,12 @@ class OperationalCostService:
         # Validation: montant doit être positif si fourni
         if cost_data.amount is not None and cost_data.amount <= 0:
             raise ValidationError("Amount must be greater than 0")
+        
+        # Validation: catégorie doit être valide si fournie
+        if cost_data.category is not None and cost_data.category not in OperationalCostCategory.get_all_values():
+            raise ValidationError(
+                f"Invalid category. Must be one of: {', '.join(OperationalCostCategory.get_all_values())}"
+            )
         
         # Préparer les données de mise à jour
         update_data = cost_data.model_dump(exclude_unset=True)

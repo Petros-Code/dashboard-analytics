@@ -272,7 +272,7 @@ class OperationalCost(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     month = Column(Date, nullable=False)  # Mois du coût (ex: 2025-11-01)
     amount = Column(Numeric(10, 2), nullable=False)  # Montant du coût
-    category = Column(String(100), nullable=False)  # Ex: "hosting", "marketing", "salaries", etc.
+    category = Column(String(100), nullable=False)  # Ex: "conditionnement", "lavage", "deboulochage", "divers", "autres", "abonnement"
     description = Column(Text, nullable=True)  # Description détaillée
     created_by = Column(Integer, ForeignKey("users.id"), nullable=False)  # Utilisateur qui a créé l'entrée
     created_at = Column(DateTime, default=func.now())
