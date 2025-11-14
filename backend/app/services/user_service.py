@@ -143,4 +143,106 @@ class UserService:
             return None
         
         return user
+    
+    def assign_role_to_user(self, user_id: int, role_id: int) -> User:
+        """
+        Assign a role to a user
+        
+        Args:
+            user_id: User ID
+            role_id: Role ID to assign
+            
+        Returns:
+            Updated User object with roles loaded
+            
+        Raises:
+            NotFoundError: If user or role not found
+            ConflictError: If role is already assigned
+        """
+        user = self.get_user_by_id(user_id)
+        role = self.role_repository.get_by_id(role_id)
+        if not role:
+            raise NotFoundError("Role", str(role_id))
+        
+        # Check if role is already assigned
+        existing_user_role = self.db.query(UserRole).filter(
+            UserRole.user_id == user_id,
+            UserRole.role_id == role_id
+        ).first()
+        
+        if existing_user_role:
+            raise ConflictError(
+                f"Role '{role.name}' is already assigned to user '{user.email}'"
+            )
+        
+        # Assign the role
+        user_role = UserRole(user_id=user_id, role_id=role_id)
+        self.db.add(user_role)
+        self.db.commit()
+        self.db.refresh(user)
+        
+        # Reload user with roles
+        from sqlalchemy.orm import joinedload
+        user = self.db.query(User).options(
+            joinedload(User.user_roles).joinedload(UserRole.role)
+        ).filter(User.id == user_id).first()
+        
+        return user
+    
+    def remove_role_from_user(self, user_id: int, role_id: int) -> User:
+        """
+        Remove a role from a user
+        
+        Args:
+            user_id: User ID
+            role_id: Role ID to remove
+            
+        Returns:
+            Updated User object with roles loaded
+            
+        Raises:
+            NotFoundError: If user, role, or assignment not found
+        """
+        user = self.get_user_by_id(user_id)
+        role = self.role_repository.get_by_id(role_id)
+        if not role:
+            raise NotFoundError("Role", str(role_id))
+        
+        # Find the user-role assignment
+        user_role = self.db.query(UserRole).filter(
+            UserRole.user_id == user_id,
+            UserRole.role_id == role_id
+        ).first()
+        
+        if not user_role:
+            raise NotFoundError(
+                "UserRole",
+                f"Role '{role.name}' is not assigned to user '{user.email}'"
+            )
+        
+        # Remove the role
+        self.db.delete(user_role)
+        self.db.commit()
+        self.db.refresh(user)
+        
+        # Reload user with roles
+        from sqlalchemy.orm import joinedload
+        user = self.db.query(User).options(
+            joinedload(User.user_roles).joinedload(UserRole.role)
+        ).filter(User.id == user_id).first()
+        
+        return user
+    
+    def get_user_roles(self, user_id: int) -> List[UserRole]:
+        """
+        Get all roles assigned to a user
+        
+        Args:
+            user_id: User ID
+            
+        Returns:
+            List of UserRole objects with roles loaded
+        """
+        user = self.get_user_by_id(user_id)
+        return user.user_roles
 

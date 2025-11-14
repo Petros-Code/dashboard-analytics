@@ -112,4 +112,53 @@ class UserController:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Internal server error: {str(e)}"
             )
+    
+    @staticmethod
+    def assign_role_to_user(user_id: int, role_id: int, db: Session = Depends(get_db)) -> UserResponse:
+        """Assign a role to a user"""
+        try:
+            service = UserService(db)
+            user = service.assign_role_to_user(user_id, role_id)
+            return UserResponse.model_validate(user)
+        except BaseAppException as e:
+            raise HTTPException(status_code=e.status_code, detail=e.message)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Internal server error: {str(e)}"
+            )
+    
+    @staticmethod
+    def remove_role_from_user(user_id: int, role_id: int, db: Session = Depends(get_db)) -> UserResponse:
+        """Remove a role from a user"""
+        try:
+            service = UserService(db)
+            user = service.remove_role_from_user(user_id, role_id)
+            return UserResponse.model_validate(user)
+        except BaseAppException as e:
+            raise HTTPException(status_code=e.status_code, detail=e.message)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Internal server error: {str(e)}"
+            )
+    
+    @staticmethod
+    def get_user_roles(user_id: int, db: Session = Depends(get_db)) -> dict:
+        """Get all roles assigned to a user"""
+        try:
+            service = UserService(db)
+            user_roles = service.get_user_roles(user_id)
+            from app.dto.role_dto import RoleResponse
+            return {
+                "user_id": user_id,
+                "roles": [RoleResponse.model_validate(ur.role) for ur in user_roles]
+            }
+        except BaseAppException as e:
+            raise HTTPException(status_code=e.status_code, detail=e.message)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Internal server error: {str(e)}"
+            )
 
