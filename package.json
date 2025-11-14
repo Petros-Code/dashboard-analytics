@@ -3,8 +3,18 @@
     "@typescript-eslint/eslint-plugin": "^8.46.1",
     "@typescript-eslint/parser": "^8.46.1",
     "@vitest/ui": "^3.2.4",
+    "autoprefixer": "^10.4.22",
     "eslint": "^9.37.0",
+    "postcss": "^8.5.6",
     "prettier": "^3.6.2",
+    "tailwindcss": "^4.1.17",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "axios": "^1.13.2",
+    "react-hook-form": "^7.66.0",
+    "react-router-dom": "^7.9.6",
+    "zod": "^4.1.12"
   }
 }
