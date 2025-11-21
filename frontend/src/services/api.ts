@@ -1,7 +1,10 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 // Configuration de l'instance Axios
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+// Utilise VITE_API_URL pour Docker (proxy nginx) ou VITE_API_BASE_URL pour développement direct
+const API_BASE_URL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/v1` 
+  : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1');
 
 const api: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,

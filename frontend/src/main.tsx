@@ -14,7 +14,6 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Navbar />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -30,7 +29,10 @@ function App() {
             path="/account"
             element={
               <ProtectedRoute>
-                <Account />
+                <>
+                  <Navbar />
+                  <Account />
+                </>
               </ProtectedRoute>
             }
           />

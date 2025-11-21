@@ -1,0 +1,7 @@
+# Ce dossier contiendra les assets du projet (images, icônes, etc.)
+# 
+# Pour utiliser une image dans un composant React :
+# import meduzaIcon from './assets/Icone_module_WP_MEDUZEAN-removebg-preview.png';
+# 
+# Puis dans le JSX :
+# <img src={meduzaIcon} alt="Meduza" />

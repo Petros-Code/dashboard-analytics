@@ -2,3 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    font-family: 'Lato', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Oswald', sans-serif;
+  }
+}
+
+@layer utilities {
+  /* Responsive pour le Dashboard */
+  @media (max-width: 1920px) {
+    .dashboard-container {
+      transform: scale(0.75);
+      transform-origin: top left;
+    }
+  }
+  
+  @media (max-width: 1440px) {
+    .dashboard-container {
+      transform: scale(0.56);
+      transform-origin: top left;
+    }
+  }
+  
+  @media (max-width: 1024px) {
+    .dashboard-container {
+      transform: scale(0.4);
+      transform-origin: top left;
+    }
+  }
+}
+
