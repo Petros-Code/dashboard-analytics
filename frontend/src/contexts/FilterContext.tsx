@@ -12,16 +12,12 @@ const FilterContext = createContext<FilterContextType | undefined>(undefined);
 export const FilterProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [selectedPeriod, setSelectedPeriod] = useState<{ startDate: string | null; endDate: string | null } | null>(null);
 
-  const daysCount = useMemo(() => {
+  const getDaysCount = React.useCallback((): number => {
     if (!selectedPeriod || !selectedPeriod.startDate || !selectedPeriod.endDate) {
       return 0;
     }
     return calculateDaysBetween(selectedPeriod.startDate, selectedPeriod.endDate);
   }, [selectedPeriod]);
-
-  const getDaysCount = useMemo(() => {
-    return (): number => daysCount;
-  }, [daysCount]);
 
   const contextValue = useMemo(() => ({
     selectedPeriod,

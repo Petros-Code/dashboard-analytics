@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FilterDropdown } from './FilterDropdown';
 import { FILTERS, FILTER_POSITIONS } from '../../constants/dashboard';
+import { useFilters } from '../../contexts/FilterContext';
+import { formatDateForDisplay, FRENCH_MONTHS } from '../../utils/dateUtils';
 
 interface FilterBarProps {
   userName: string;
 }
 
 export const FilterBar: React.FC<FilterBarProps> = ({ userName }) => {
+  const { selectedPeriod } = useFilters();
   const [filterValues, setFilterValues] = useState<Record<string, string>>({
     period: '17 Sep 2025 - 26 Nov 2025',
     marketplace: '',
     country: '',
   });
+
+  // Synchroniser la période avec le contexte
+  useEffect(() => {
+    if (selectedPeriod?.startDate && selectedPeriod?.endDate) {
+      const startDate = new Date(selectedPeriod.startDate);
+      const endDate = new Date(selectedPeriod.endDate);
+      const formatted = `${formatDateForDisplay(startDate, FRENCH_MONTHS)} - ${formatDateForDisplay(endDate, FRENCH_MONTHS)}`;
+      setFilterValues((prev) => ({
+        ...prev,
+        period: formatted,
+      }));
+    }
+  }, [selectedPeriod]);
 
   const handleFilterChange = (filterId: string, value: string) => {
     setFilterValues((prev) => ({

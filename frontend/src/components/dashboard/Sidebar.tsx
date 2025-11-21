@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MenuItem } from './MenuItem';
 import { MenuItemId } from '../../types/dashboard';
 import { MENU_ITEMS } from '../../constants/dashboard';
@@ -8,8 +9,35 @@ interface SidebarProps {
   onMenuClick: (id: MenuItemId) => void;
 }
 
+const MENU_ROUTES: Record<MenuItemId, string> = {
+  accueil: '/dashboard',
+  performances: '/dashboard/performances',
+  rentabilite: '/dashboard/rentabilite',
+  stocks: '/dashboard/stocks',
+  marketing: '/dashboard/marketing',
+  traffic: '/dashboard/traffic',
+};
+
 export const Sidebar: React.FC<SidebarProps> = ({ activeMenu, onMenuClick }) => {
-  const menuTopPositions = [36, 91, 136, 186, 236, 286];
+  const navigate = useNavigate();
+  
+  // Calcul des positions avec espacement uniforme
+  // Chaque item a une hauteur de 50px, espacement de 10px entre chaque item
+  const ITEM_HEIGHT = 50;
+  const ITEM_SPACING = 10;
+  const FIRST_ITEM_TOP = 36;
+  
+  const menuTopPositions = MENU_ITEMS.map((_, index) => {
+    return FIRST_ITEM_TOP + index * (ITEM_HEIGHT + ITEM_SPACING);
+  });
+
+  const handleMenuItemClick = (id: MenuItemId) => {
+    onMenuClick(id);
+    const route = MENU_ROUTES[id];
+    if (route) {
+      navigate(route);
+    }
+  };
 
   return (
     <div className="absolute w-[300px] h-[1200px] left-[20px] top-[20px] bg-white rounded-[15px] flex-shrink-0 shadow-lg">
@@ -35,7 +63,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeMenu, onMenuClick }) => 
             label={item.label}
             icon={item.icon}
             isActive={activeMenu === item.id}
-            onClick={onMenuClick}
+            onClick={handleMenuItemClick}
             top={menuTopPositions[index]}
           />
         ))}

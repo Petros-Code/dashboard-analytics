@@ -26,6 +26,11 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { setSelectedPeriod } = useFilters();
 
+  // Synchroniser la valeur avec la prop value (pour la période depuis le contexte)
+  useEffect(() => {
+    setSelectedValue(value);
+  }, [value]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
