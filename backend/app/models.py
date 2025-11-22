@@ -80,6 +80,17 @@ class Marketplace(Base):
     product_marketplaces = relationship("ProductMarketplace", back_populates="marketplace")
     orders = relationship("Order", back_populates="marketplace")
 
+class Country(Base):
+    __tablename__ = "countries"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    code = Column(String(10), nullable=False, unique=True)  # FR, US, GB, etc. (code ISO)
+    name = Column(String(100), nullable=False)  # France, États-Unis, Royaume-Uni, etc.
+    created_at = Column(DateTime, default=func.now())
+
+    # Relations
+    orders = relationship("Order", back_populates="country")
+
 class Customer(Base):
     __tablename__ = "customers"
 
@@ -146,7 +157,7 @@ class Order(Base):
     order_number = Column(String(100), unique=True, nullable=False)
     customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False)
     marketplace_id = Column(Integer, ForeignKey("marketplaces.id"), nullable=False)
-    country_code = Column(String(10), nullable=True)  # FR, US, etc.
+    country_id = Column(Integer, ForeignKey("countries.id"), nullable=True)  # Relation vers la table countries
     order_date = Column(DateTime, nullable=False)
     subtotal_ht = Column(Numeric(10, 2), nullable=False)
     discount_amount = Column(Numeric(10, 2), default=0.00)
@@ -165,6 +176,7 @@ class Order(Base):
     # Relations
     customer = relationship("Customer", back_populates="orders")
     marketplace = relationship("Marketplace", back_populates="orders")
+    country = relationship("Country", back_populates="orders")
     order_items = relationship("OrderItem", back_populates="order")
     promo_code = relationship("PromoCode", foreign_keys=[promo_code_id])
     order_promo_codes = relationship("OrderPromoCode", back_populates="order")
