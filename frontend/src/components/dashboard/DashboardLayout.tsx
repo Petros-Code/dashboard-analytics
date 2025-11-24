@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { SearchBar } from './SearchBar';
 import { LogoutButton } from './LogoutButton';
+import { AccountButton } from './AccountButton';
 import { FilterBar } from './FilterBar';
 import { KPIBar } from './KPIBar';
 import { GraphicsBar } from './GraphicsBar';
@@ -53,6 +54,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ section }) => 
           {/* Search bar */}
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
+          {/* Account Button */}
+          <AccountButton />
+          
           {/* Logout Button */}
           <LogoutButton onLogout={handleLogout} />
 
@@ -60,7 +64,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ section }) => 
           <FilterBar userName={user?.name || 'Admin'} />
 
           {/* KPI bar */}
-          <KPIBar />
+          <KPIBar section={section} />
 
           {/* Graphics containers bar */}
           <GraphicsBar section={section} />

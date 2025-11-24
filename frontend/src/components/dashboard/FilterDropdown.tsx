@@ -6,8 +6,7 @@ interface FilterDropdownProps {
   label: string;
   value: string;
   icon: React.ReactNode;
-  left: number;
-  type: 'period' | 'marketplace' | 'country';
+  type: 'period' | 'marketplace' | 'country' | 'category' | 'gender';
   options?: string[];
   onValueChange?: (value: string) => void;
 }
@@ -16,7 +15,6 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
   label, 
   value, 
   icon, 
-  left, 
   type,
   options = [],
   onValueChange 
@@ -68,11 +66,11 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
           {options.length > 0 ? (
             options.map((option) => (
               <button
-                key={option}
+                key={option || 'all'}
                 onClick={() => handleSelect(option)}
                 className="w-full text-left px-4 py-2 hover:bg-[#E7EAF0] transition-colors font-['Lato'] text-[16px] text-[#1D1D1D]"
               >
-                {option}
+                {option || 'Tous'}
               </button>
             ))
           ) : (
@@ -86,23 +84,25 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
   };
 
   return (
-    <div className="absolute" style={{ left: `${left}px` }} ref={dropdownRef}>
+    <div className="relative flex-shrink-0" ref={dropdownRef}>
       <button
         onClick={handleToggle}
-        className="w-[340px] h-[70px] bg-[#E7EAF0] rounded-[11px] relative cursor-pointer hover:bg-[#D9DCE5] transition-colors"
+        className="w-[340px] h-[70px] bg-[#E7EAF0] rounded-[11px] relative cursor-pointer hover:bg-[#D9DCE5] transition-colors flex items-center px-3"
         aria-label={label}
         aria-expanded={isOpen}
       >
-        <div className="absolute left-[12px] top-[10px] w-[50px] h-[50px] bg-[#19182D] rounded-[10px] flex items-center justify-center">
+        <div className="w-[50px] h-[50px] bg-[#19182D] rounded-[10px] flex items-center justify-center flex-shrink-0">
           {icon}
         </div>
-        <p className="absolute left-[76px] top-[10px] w-[200px] h-[15px] font-['Lato'] font-medium text-[20px] leading-[40px] text-[#1D1D1D] flex items-center">
-          {label}
-        </p>
-        <p className={`absolute left-[76px] top-[42px] w-[200px] h-[15px] font-['Lato'] font-medium text-[16px] leading-[40px] flex items-center ${selectedValue ? 'text-[#7A778E]' : 'text-[#B0B0B0] italic'}`}>
-          {selectedValue || 'Sélectionner...'}
-        </p>
-        <div className={`absolute left-[292px] top-[16px] w-[40px] h-[38px] flex items-center justify-center transition-transform ${isOpen ? 'rotate-180' : ''}`}>
+        <div className="flex-1 flex flex-col justify-center ml-4 min-w-0">
+          <p className="font-['Lato'] font-medium text-[18px] leading-[22px] text-[#1D1D1D] truncate">
+            {label}
+          </p>
+          <p className={`font-['Lato'] font-medium text-[14px] leading-[18px] truncate ${selectedValue ? 'text-[#7A778E]' : 'text-[#B0B0B0] italic'}`}>
+            {selectedValue || 'Sélectionner...'}
+          </p>
+        </div>
+        <div className={`w-[40px] h-[38px] flex items-center justify-center transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}>
           <svg className="w-[24px] h-[14px] text-[#7A7795]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M7 10L12 15L17 10H7Z" />
           </svg>
