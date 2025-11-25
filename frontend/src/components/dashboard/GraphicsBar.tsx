@@ -1,6 +1,8 @@
 import React from 'react';
 import { GraphContainer } from './GraphContainer';
-import { GRAPH_CONTAINERS, RENTABILITE_GRAPH_CONTAINERS, TRAFFIC_GRAPH_CONTAINERS, PERFORMANCES_GRAPH_CONTAINERS } from '../../constants/dashboard';
+import { AgingProductsTable } from './AgingProductsTable';
+import { useAgingProducts } from '../../contexts/AgingProductsContext';
+import { GRAPH_CONTAINERS, RENTABILITE_GRAPH_CONTAINERS, TRAFFIC_GRAPH_CONTAINERS, PERFORMANCES_GRAPH_CONTAINERS, STOCKS_GRAPH_CONTAINERS, MARKETING_GRAPH_CONTAINERS } from '../../constants/dashboard';
 import { MenuItemId } from '../../types/dashboard';
 
 interface GraphicsBarProps {
@@ -20,6 +22,8 @@ interface GraphicsBarProps {
  * Peut accepter des containers personnalisés via la prop containers
  */
 export const GraphicsBar: React.FC<GraphicsBarProps> = ({ section, containers }) => {
+  const { selectedDays } = useAgingProducts();
+  
   // Déterminer les containers à utiliser
   let graphContainers = containers;
   
@@ -31,6 +35,10 @@ export const GraphicsBar: React.FC<GraphicsBarProps> = ({ section, containers })
       graphContainers = TRAFFIC_GRAPH_CONTAINERS;
     } else if (section === 'performances') {
       graphContainers = PERFORMANCES_GRAPH_CONTAINERS;
+    } else if (section === 'stocks') {
+      graphContainers = STOCKS_GRAPH_CONTAINERS;
+    } else if (section === 'marketing') {
+      graphContainers = MARKETING_GRAPH_CONTAINERS;
     } else if (section === 'accueil') {
       graphContainers = GRAPH_CONTAINERS;
     } else {
@@ -48,6 +56,12 @@ export const GraphicsBar: React.FC<GraphicsBarProps> = ({ section, containers })
     );
   }
 
+  // Calculer la position du tableau (sous le dernier graphique)
+  const lastGraphTop = graphContainers.length > 0 
+    ? Math.max(...graphContainers.map(c => c.top + c.height))
+    : 447;
+  const tableTop = lastGraphTop + 20; // 20px d'espacement
+
   return (
     <div className="absolute left-0 top-[447px] w-[2200px]">
       {graphContainers.map((container) => (
@@ -60,6 +74,15 @@ export const GraphicsBar: React.FC<GraphicsBarProps> = ({ section, containers })
           top={container.top}
         />
       ))}
+      {/* Tableau des produits vieillissants pour la section Stocks */}
+      {section === 'stocks' && (
+        <div 
+          className="absolute"
+          style={{ left: '0px', top: `${tableTop}px`, width: '2200px' }}
+        >
+          <AgingProductsTable days={selectedDays} />
+        </div>
+      )}
     </div>
   );
 };

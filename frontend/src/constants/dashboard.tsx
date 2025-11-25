@@ -25,6 +25,13 @@ import {
   FaReply,
   FaTags,
   FaVenusMars,
+  FaCheckCircle,
+  FaSpinner,
+  FaEuroSign,
+  FaCalendar,
+  FaInstagram,
+  FaTicketAlt,
+  FaStar,
 } from 'react-icons/fa';
 
 // Configuration des éléments de menu
@@ -355,5 +362,86 @@ export const PERFORMANCES_GRAPH_CONTAINERS = [
   { id: 'performances-graph-3', width: 700, height: 320, left: 0, top: 350 },
   { id: 'performances-graph-4', width: 700, height: 320, left: 737, top: 350 },
   { id: 'performances-graph-5', width: 700, height: 320, left: 1475, top: 350 },
+];
+
+// Configuration des KPI Cards pour la page Stocks
+export const STOCKS_KPI_CARDS = [
+  {
+    id: 'stocks-en-ligne',
+    title: 'Stocks actuellement en ligne',
+    value: '0',
+    description: '(annonce validée + description + photo + prix)',
+    icon: <FaCheckCircle className="w-[50px] h-[50px] text-[#1D1D1D]" />,
+  },
+  {
+    id: 'stocks-en-cours',
+    title: 'Stocks en cours de mise en ligne',
+    value: '0',
+    description: '(brouillon, sans photos, sans prix)',
+    icon: <FaSpinner className="w-[50px] h-[50px] text-[#1D1D1D]" />,
+  },
+  {
+    id: 'prix-achat-moyen',
+    title: 'Prix d\'achat moyen',
+    value: '0 €',
+    description: '(articles en ligne)',
+    icon: <FaEuroSign className="w-[50px] h-[50px] text-[#1D1D1D]" />,
+  },
+  {
+    id: 'jours-stock-moyen',
+    title: 'Nombre de jours de stock moyen',
+    value: '0',
+    description: '(âge moyen des articles)',
+    icon: <FaCalendar className="w-[50px] h-[50px] text-[#1D1D1D]" />,
+  },
+];
+
+// Configuration des containers graphiques pour la page Stocks
+export const STOCKS_GRAPH_CONTAINERS = [
+  { id: 'stocks-graph-1', width: 1163, height: 320, left: 0, top: 10 },
+  { id: 'stocks-graph-2', width: 974, height: 320, left: 1201, top: 10 },
+  { id: 'stocks-graph-3', width: 1080, height: 320, left: 0, top: 350 },
+  { id: 'stocks-graph-4', width: 1080, height: 320, left: 1120, top: 350 },
+];
+
+// Configuration des KPI Cards pour la page Marketing
+export const MARKETING_KPI_CARDS = [
+  {
+    id: 'instagram-abonnes-actuel',
+    title: 'Nombre d\'abonnés Instagram actuel',
+    value: '0',
+    description: '(mois actuel)',
+    icon: <FaInstagram className="w-[50px] h-[50px] text-[#1D1D1D]" />,
+  },
+  {
+    id: 'tiktok-abonnes-actuel',
+    title: 'Nombre d\'abonnés TikTok actuel',
+    value: '0',
+    description: '(mois actuel)',
+    icon: <FaUsers className="w-[50px] h-[50px] text-[#1D1D1D]" />,
+  },
+  {
+    id: 'codes-promo-total',
+    title: 'Nombre de codes promo utilisé',
+    value: '0',
+    description: '(période sélectionnée)',
+    icon: <FaTicketAlt className="w-[50px] h-[50px] text-[#1D1D1D]" />,
+  },
+  {
+    id: 'code-promo-plus-utilise',
+    title: 'Code promo le plus utilisé',
+    value: '-',
+    description: '(période sélectionnée)',
+    icon: <FaStar className="w-[50px] h-[50px] text-[#1D1D1D]" />,
+    isBold: true,
+  },
+];
+
+// Configuration des containers graphiques pour la page Marketing
+export const MARKETING_GRAPH_CONTAINERS = [
+  { id: 'marketing-graph-1', width: 1080, height: 320, left: 0, top: 10 },
+  { id: 'marketing-graph-2', width: 1080, height: 320, left: 1120, top: 10 },
+  { id: 'marketing-graph-3', width: 1080, height: 320, left: 0, top: 350 },
+  { id: 'marketing-graph-4', width: 1080, height: 320, left: 1120, top: 350 },
 ];
 

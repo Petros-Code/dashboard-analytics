@@ -7,10 +7,12 @@ interface KPICardProps {
   description: string;
   icon: React.ReactNode;
   left: number;
+  width?: number;
   isBold?: boolean;
   isFlippable?: boolean;
   flipTitle?: string;
   flipValue?: string;
+  customButtons?: React.ReactNode;
 }
 
 export const KPICard: React.FC<KPICardProps> = ({ 
@@ -19,10 +21,12 @@ export const KPICard: React.FC<KPICardProps> = ({
   description, 
   icon, 
   left, 
+  width = 360,
   isBold = false,
   isFlippable = false,
   flipTitle,
-  flipValue
+  flipValue,
+  customButtons
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
@@ -36,7 +40,7 @@ export const KPICard: React.FC<KPICardProps> = ({
       style={{ 
         left: `${left}px`, 
         top: '9px', 
-        width: '360px', 
+        width: `${width}px`, 
         height: '180px',
         perspective: '1000px'
       }}
@@ -57,33 +61,42 @@ export const KPICard: React.FC<KPICardProps> = ({
             WebkitBackfaceVisibility: 'hidden'
           }}
         >
-          <div className="w-full h-full flex items-center justify-around px-6">
-            {/* Icône */}
-            <div className="flex-shrink-0 flex flex-col items-center justify-center">
-              {icon}
-              {isFlippable && (
-                <button
-                  onClick={handleFlip}
-                  className="mt-2 w-[32px] h-[32px] rounded-full bg-[#1D1D1D] hover:bg-[#3B3B3B] flex items-center justify-center transition-colors duration-200 cursor-pointer"
-                  aria-label="Retourner la carte"
-                >
-                  <FaSync className="w-[16px] h-[16px] text-white" />
-                </button>
-              )}
+          <div className="w-full h-full flex items-center justify-between px-6">
+            <div className="flex items-center justify-around flex-1">
+              {/* Icône */}
+              <div className="flex-shrink-0 flex flex-col items-center justify-center">
+                {icon}
+                {isFlippable && (
+                  <button
+                    onClick={handleFlip}
+                    className="mt-2 w-[32px] h-[32px] rounded-full bg-[#1D1D1D] hover:bg-[#3B3B3B] flex items-center justify-center transition-colors duration-200 cursor-pointer"
+                    aria-label="Retourner la carte"
+                  >
+                    <FaSync className="w-[16px] h-[16px] text-white" />
+                  </button>
+                )}
+              </div>
+              
+              {/* Contenu texte */}
+              <div className="flex-1 flex flex-col justify-center ml-8">
+                <p className={`font-['Lato'] ${isBold ? 'font-bold' : 'font-medium'} text-[18px] leading-[25px] text-[#1D1D1D] mb-2`}>
+                  {title}
+                </p>
+                <p className="font-['Lato'] font-medium text-[22px] leading-[30px] text-[#1D1D1D] mb-1">
+                  {value}
+                </p>
+                <p className="font-['Lato'] font-medium text-[14px] leading-[20px] text-[#1D1D1D]">
+                  {description}
+                </p>
+              </div>
             </div>
             
-            {/* Contenu texte */}
-            <div className="flex-1 flex flex-col justify-center ml-8">
-              <p className={`font-['Lato'] ${isBold ? 'font-bold' : 'font-medium'} text-[18px] leading-[25px] text-[#1D1D1D] mb-2`}>
-                {title}
-              </p>
-              <p className="font-['Lato'] font-medium text-[22px] leading-[30px] text-[#1D1D1D] mb-1">
-                {value}
-              </p>
-              <p className="font-['Lato'] font-medium text-[14px] leading-[20px] text-[#1D1D1D]">
-                {description}
-              </p>
-            </div>
+            {/* Boutons personnalisés */}
+            {customButtons && (
+              <div className="flex-shrink-0 ml-4">
+                {customButtons}
+              </div>
+            )}
           </div>
         </div>
 

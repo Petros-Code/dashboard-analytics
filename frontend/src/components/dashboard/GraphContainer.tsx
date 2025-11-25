@@ -19,6 +19,14 @@ import { OrdersDailyChart } from './charts/OrdersDailyChart';
 import { AveragePriceDailyChart } from './charts/AveragePriceDailyChart';
 import { AverageBasketDailyChart } from './charts/AverageBasketDailyChart';
 import { ItemsPerOrderDailyChart } from './charts/ItemsPerOrderDailyChart';
+import { PublishedProductsChart } from './charts/PublishedProductsChart';
+import { StockValueHTChart } from './charts/StockValueHTChart';
+import { StockValuePurchaseChart } from './charts/StockValuePurchaseChart';
+import { StockByCategoryChart } from './charts/StockByCategoryChart';
+import { InstagramFollowersChart } from './charts/InstagramFollowersChart';
+import { TikTokFollowersChart } from './charts/TikTokFollowersChart';
+import { PromoCodeUsageChart } from './charts/PromoCodeUsageChart';
+import { PromoCodeOrdersChart } from './charts/PromoCodeOrdersChart';
 
 interface GraphContainerProps {
   id: string;
@@ -74,6 +82,24 @@ const getChartComponent = (id: string) => {
       return AverageBasketDailyChart;
     case 'performances-graph-5':
       return ItemsPerOrderDailyChart;
+    // Graphiques de la page Stocks
+    case 'stocks-graph-1':
+      return PublishedProductsChart;
+    case 'stocks-graph-2':
+      return StockValueHTChart;
+    case 'stocks-graph-3':
+      return StockValuePurchaseChart;
+    case 'stocks-graph-4':
+      return StockByCategoryChart;
+    // Graphiques de la page Marketing
+    case 'marketing-graph-1':
+      return InstagramFollowersChart;
+    case 'marketing-graph-2':
+      return TikTokFollowersChart;
+    case 'marketing-graph-3':
+      return PromoCodeUsageChart;
+    case 'marketing-graph-4':
+      return PromoCodeOrdersChart;
     default:
       return null;
   }

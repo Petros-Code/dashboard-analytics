@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { AgingProductsProvider } from '../../contexts/AgingProductsContext';
 import { Sidebar } from './Sidebar';
 import { SearchBar } from './SearchBar';
 import { LogoutButton } from './LogoutButton';
@@ -40,37 +41,39 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ section }) => 
   };
 
   return (
-    <div className="relative w-full h-screen bg-[#E7EAF0] overflow-auto">
-      {/* Dashboard Container - Responsive avec min-width pour desktop */}
-      <div className="dashboard-container absolute w-[2560px] h-[1440px]">
-        {/* Background */}
-        <div className="absolute w-full h-full bg-[#E7EAF0] rounded-[15px]"></div>
+    <AgingProductsProvider>
+      <div className="relative w-full h-screen bg-[#E7EAF0] overflow-auto">
+        {/* Dashboard Container - Responsive avec min-width pour desktop */}
+        <div className="dashboard-container absolute w-[2560px] h-[1440px]">
+          {/* Background */}
+          <div className="absolute w-full h-full bg-[#E7EAF0] rounded-[15px]"></div>
 
-        {/* Menu Sidebar */}
-        <Sidebar activeMenu={activeMenu} onMenuClick={handleMenuClick} />
+          {/* Menu Sidebar */}
+          <Sidebar activeMenu={activeMenu} onMenuClick={handleMenuClick} />
 
-        {/* Main Content - 2200px x 950px - Ajusté pour le padding du sidebar */}
-        <div className="absolute left-[340px] top-0 w-[2200px] h-[950px]">
-          {/* Search bar */}
-          <SearchBar value={searchQuery} onChange={setSearchQuery} />
+          {/* Main Content - 2200px x 950px - Ajusté pour le padding du sidebar */}
+          <div className="absolute left-[340px] top-0 w-[2200px] h-[950px]">
+            {/* Search bar */}
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
-          {/* Account Button */}
-          <AccountButton />
-          
-          {/* Logout Button */}
-          <LogoutButton onLogout={handleLogout} />
+            {/* Account Button */}
+            <AccountButton />
+            
+            {/* Logout Button */}
+            <LogoutButton onLogout={handleLogout} />
 
-          {/* Filter bar */}
-          <FilterBar userName={user?.name || 'Admin'} />
+            {/* Filter bar */}
+            <FilterBar userName={user?.name || 'Admin'} />
 
-          {/* KPI bar */}
-          <KPIBar section={section} />
+            {/* KPI bar */}
+            <KPIBar section={section} />
 
-          {/* Graphics containers bar */}
-          <GraphicsBar section={section} />
+            {/* Graphics containers bar */}
+            <GraphicsBar section={section} />
+          </div>
         </div>
       </div>
-    </div>
+    </AgingProductsProvider>
   );
 };
 

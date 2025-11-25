@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { dashboardService } from '../services/dashboardService';
 
 interface UseKPIDataResult {
-  count: number;
+  value: number;
   isLoading: boolean;
   error: Error | null;
 }
@@ -12,13 +11,22 @@ interface UseKPIDataResult {
  * @param fetchFunction - Fonction de récupération des données
  * @param startDate - Date de début (optionnelle)
  * @param endDate - Date de fin (optionnelle)
+ * @param marketplaceId - ID de la marketplace (optionnelle)
+ * @param countryId - ID du pays (optionnelle)
  */
 export const useKPIData = (
-  fetchFunction: (startDate?: string, endDate?: string) => Promise<{ count: number }>,
+  fetchFunction: (
+    startDate?: string, 
+    endDate?: string, 
+    marketplaceId?: number | null, 
+    countryId?: number | null
+  ) => Promise<{ count?: number; total?: number }>,
   startDate?: string | null,
-  endDate?: string | null
+  endDate?: string | null,
+  marketplaceId?: number | null,
+  countryId?: number | null
 ): UseKPIDataResult => {
-  const [count, setCount] = useState<number>(0);
+  const [value, setValue] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -29,22 +37,25 @@ export const useKPIData = (
       try {
         const response = await fetchFunction(
           startDate || undefined,
-          endDate || undefined
+          endDate || undefined,
+          marketplaceId !== undefined && marketplaceId !== null ? marketplaceId : undefined,
+          countryId !== undefined && countryId !== null ? countryId : undefined
         );
-        setCount(response.count);
+        // Supporte à la fois 'count' et 'total' dans la réponse
+        setValue(response.count ?? response.total ?? 0);
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Unknown error');
         console.error('Error fetching KPI data:', error);
         setError(error);
-        setCount(0);
+        setValue(0);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [fetchFunction, startDate, endDate]);
+  }, [fetchFunction, startDate, endDate, marketplaceId, countryId]);
 
-  return { count, isLoading, error };
+  return { value, isLoading, error };
 };
 
